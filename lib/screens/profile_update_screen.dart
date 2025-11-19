@@ -61,16 +61,9 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen>
   Future<void> _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? savedUsername = prefs.getString('username');
-    if (savedUsername != null) {
-      setState(() {
-        _usernameController.text = savedUsername;
-      });
-    } else {
-      // Default username jika belum ada
-      setState(() {
-        _usernameController.text = 'user';
-      });
-    }
+    setState(() {
+      _usernameController.text = savedUsername ?? '';
+    });
   }
 
   Future<void> _updateProfile() async {
