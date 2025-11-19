@@ -370,7 +370,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(20),
                     ),
-                    child: Image.network(
+                    child: Image.asset(
                       product.imageUrl,
                       height: 140,
                       width: double.infinity,
