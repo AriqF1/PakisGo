@@ -30,6 +30,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # Firebase core
+  firebase_core: ^3.15.0
+
+  # Auth (login, register, Google, dll)
+  firebase_auth: ^5.3.0
+
+  # Database (produk, transaksi, history)
+  cloud_firestore: ^5.4.0
+
+  # Upload bukti pembayaran
+  firebase_storage: ^12.3.0
   shared_preferences: ^2.2.3
 
   # Untuk membuka Telepon, SMS, dan Maps
@@ -40,6 +52,8 @@ dependencies:
 
   # Untuk memuat font dengan mudah
   google_fonts: ^6.2.1
+
+  google_sign_in: ^6.2.1
 
   # Ikon (jika ingin lebih dari Material Icons)
   # lucide_icons: ^0.414.0
