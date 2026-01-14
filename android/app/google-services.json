@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "68094917540",
+    "project_id": "pakisgo-37a9e",
+    "storage_bucket": "pakisgo-37a9e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68094917540:android:bad8c89386f508ff1cdf31",
+        "android_client_info": {
+          "package_name": "com.ariq.pakisgo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIsU3eNPTasSB3WElxCTtezQF0d6F2AbY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68094917540:android:901417c2e5a7a70d1cdf31",
+        "android_client_info": {
+          "package_name": "com.example.pakis_go"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIsU3eNPTasSB3WElxCTtezQF0d6F2AbY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
