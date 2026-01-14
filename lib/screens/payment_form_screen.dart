@@ -19,7 +19,9 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
   final _notesController = TextEditingController();
 
   String _selectedPaymentMethod = 'COD';
+  String _selectedShipping = 'REG';
   bool _isProcessing = false;
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -46,6 +48,12 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
       'description': 'OVO, GoPay, Dana',
       'color': Colors.orange,
     },
+  ];
+
+  final List<Map<String, dynamic>> _shippingOptions = [
+    {'id': 'REG', 'name': 'Reguler', 'price': 10000},
+    {'id': 'YES', 'name': 'Yakin Esok Sampai', 'price': 25000},
+    {'id': 'OKE', 'name': 'Oke Delivery', 'price': 15000},
   ];
 
   @override
@@ -78,8 +86,42 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
     super.dispose();
   }
 
+  Future<void> _processPayment() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isProcessing = true);
+
+    // Simulasi proses pembayaran
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (mounted) {
+      final cart = Provider.of<CartProvider>(context, listen: false);
+
+      // Tampilkan nota pembayaran
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => _buildReceiptDialog(cart),
+      );
+
+      cart.resetCart();
+
+      // Kembali ke dashboard
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }
+  }
+
+  int _getShippingCost() {
+    return _shippingOptions.firstWhere(
+      (option) => option['id'] == _selectedShipping,
+    )['price'];
+  }
+
+  double _getTotalPayment(CartProvider cart) {
+    return cart.totalPrice + _getShippingCost();
+  }
+
   List<Widget> _buildItemsList(CartProvider cart) {
-    // Group products by name and count quantities
     final Map<String, Map<String, dynamic>> groupedItems = {};
 
     for (var product in cart.items) {
@@ -126,30 +168,6 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
     }).toList();
   }
 
-  Future<void> _processPayment() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() => _isProcessing = true);
-
-    // Simulasi processing payment
-    await Future.delayed(const Duration(seconds: 2));
-
-    if (mounted) {
-      final cart = Provider.of<CartProvider>(context, listen: false);
-      cart.resetCart();
-
-      // Show success dialog
-      await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => _buildSuccessDialog(),
-      );
-
-      // Navigate back to dashboard
-      Navigator.of(context).popUntil((route) => route.isFirst);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
@@ -176,13 +194,12 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Order Summary Card
+                // Ringkasan Pesanan
                 _buildOrderSummary(cart),
-
                 const SizedBox(height: 16),
 
-                // Form Section
-                _buildFormSection(),
+                // Form Pembeli + Metode Pembayaran + Pengiriman
+                _buildFormSection(cart),
 
                 const SizedBox(height: 120),
               ],
@@ -249,7 +266,6 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
           ),
           const SizedBox(height: 20),
 
-          // Items List
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -258,12 +274,10 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
             ),
             child: Column(children: _buildItemsList(cart)),
           ),
-
           const SizedBox(height: 16),
           const Divider(color: Colors.white38, thickness: 1),
           const SizedBox(height: 16),
 
-          // Total
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -276,7 +290,7 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
                 ),
               ),
               Text(
-                "Rp ${cart.totalPrice.toStringAsFixed(0)}",
+                "Rp ${_getTotalPayment(cart).toStringAsFixed(0)}",
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -290,7 +304,7 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
     );
   }
 
-  Widget _buildFormSection() {
+  Widget _buildFormSection(CartProvider cart) {
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
@@ -310,54 +324,36 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Customer Information
+            // Info Pembeli
             _buildSectionTitle(icon: Icons.person, title: "Informasi Pembeli"),
             const SizedBox(height: 16),
-
             _buildTextField(
               controller: _nameController,
               label: "Nama Lengkap",
               hint: "Masukkan nama lengkap",
               icon: Icons.person_outline,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Nama tidak boleh kosong';
-                }
-                return null;
-              },
+              validator: (v) => v!.isEmpty ? 'Nama tidak boleh kosong' : null,
             ),
             const SizedBox(height: 16),
-
             _buildTextField(
               controller: _phoneController,
               label: "Nomor Telepon",
               hint: "08xxxxxxxxxx",
               icon: Icons.phone_outlined,
               keyboardType: TextInputType.phone,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Nomor telepon tidak boleh kosong';
-                }
-                return null;
-              },
+              validator: (v) =>
+                  v!.isEmpty ? 'Nomor telepon tidak boleh kosong' : null,
             ),
             const SizedBox(height: 16),
-
             _buildTextField(
               controller: _addressController,
               label: "Alamat Lengkap",
               hint: "Masukkan alamat lengkap",
               icon: Icons.location_on_outlined,
               maxLines: 3,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Alamat tidak boleh kosong';
-                }
-                return null;
-              },
+              validator: (v) => v!.isEmpty ? 'Alamat tidak boleh kosong' : null,
             ),
             const SizedBox(height: 16),
-
             _buildTextField(
               controller: _notesController,
               label: "Catatan (Opsional)",
@@ -365,13 +361,11 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
               icon: Icons.note_outlined,
               maxLines: 2,
             ),
-
             const SizedBox(height: 32),
 
-            // Payment Method
+            // Metode Pembayaran
             _buildSectionTitle(icon: Icons.payment, title: "Metode Pembayaran"),
             const SizedBox(height: 16),
-
             ..._paymentMethods.map(
               (method) => _buildPaymentMethodTile(
                 id: method['id'],
@@ -379,6 +373,19 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
                 description: method['description'],
                 icon: method['icon'],
                 color: method['color'],
+              ),
+            ),
+
+            const SizedBox(height: 32),
+
+            // Pengiriman
+            _buildSectionTitle(icon: Icons.local_shipping, title: "Pengiriman"),
+            const SizedBox(height: 16),
+            ..._shippingOptions.map(
+              (option) => _buildShippingOptionTile(
+                id: option['id'],
+                name: option['name'],
+                price: option['price'],
               ),
             ),
           ],
@@ -542,7 +549,41 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
     );
   }
 
+  Widget _buildShippingOptionTile({
+    required String id,
+    required String name,
+    required int price,
+  }) {
+    final isSelected = _selectedShipping == id;
+    return GestureDetector(
+      onTap: () => setState(() => _selectedShipping = id),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? kPrimaryGreen.withOpacity(0.1)
+              : Colors.grey.shade50,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? kPrimaryGreen : Colors.grey.shade200,
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(name, style: TextStyle(fontWeight: FontWeight.w600)),
+            Text("Rp $price", style: TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildBottomBar(CartProvider cart) {
+    double totalPayment = _getTotalPayment(cart);
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -559,7 +600,6 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Total Amount Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -575,7 +615,7 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "Rp ${cart.totalPrice.toStringAsFixed(0)}",
+                      "Rp ${totalPayment.toStringAsFixed(0)}",
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -587,8 +627,6 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
               ],
             ),
             const SizedBox(height: 16),
-
-            // Confirm Button
             SizedBox(
               width: double.infinity,
               height: 56,
@@ -636,53 +674,49 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
     );
   }
 
-  Widget _buildSuccessDialog() {
+  Widget _buildReceiptDialog(CartProvider cart) {
+    int shippingCost = _getShippingCost();
+    double totalPayment = _getTotalPayment(cart);
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: kPrimaryGreen.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.check_circle, color: kPrimaryGreen, size: 64),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              "Pembayaran Berhasil!",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              "Terima kasih telah menggunakan layanan PakisGo",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-            ),
-            const SizedBox(height: 32),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: kPrimaryGreen,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  "Kembali ke Dashboard",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.all(24),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  "NOTA PEMBAYARAN",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              Text("Nama: ${_nameController.text}"),
+              Text("Telepon: ${_phoneController.text}"),
+              Text("Alamat: ${_addressController.text}"),
+              const Divider(height: 20),
+              ...cart.items.map(
+                (item) => Text("${item.name} x1 = Rp ${item.price}"),
+              ),
+              const Divider(height: 20),
+              Text("Ongkos Kirim: Rp $shippingCost"),
+              Text(
+                "Total Pembayaran: Rp ${totalPayment.toStringAsFixed(0)}",
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Tutup Nota"),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
