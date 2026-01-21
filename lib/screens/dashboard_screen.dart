@@ -8,6 +8,7 @@ import '../utils/app_colors.dart';
 import 'payment_form_screen.dart';
 import 'product_detail_screen.dart';
 import 'profile_update_screen.dart';
+import 'history_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -596,68 +597,91 @@ class _DashboardScreenState extends State<DashboardScreen>
   void _showMenuBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true, // penting supaya bisa scroll
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(2),
+      builder: (context) => SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
-            _buildMenuTile(
-              icon: Icons.call,
-              title: "Call Center",
-              subtitle: "+62 812 3456 7890",
-              onTap: () {
-                Navigator.pop(context);
-                _launchURL("tel:+6281234567890");
-              },
-            ),
-            _buildMenuTile(
-              icon: Icons.sms,
-              title: "SMS Center",
-              subtitle: "Kirim pesan ke admin",
-              onTap: () {
-                Navigator.pop(context);
-                _launchURL("sms:+6281234567890");
-              },
-            ),
-            _buildMenuTile(
-              icon: Icons.location_on,
-              title: "Lokasi Kami",
-              subtitle: "Lihat di Google Maps",
-              onTap: () {
-                Navigator.pop(context);
-                _launchURL("https://maps.google.com/?q=-7.2550,110.4300");
-              },
-            ),
-            const Divider(height: 32),
-            _buildMenuTile(
-              icon: Icons.person,
-              title: "Update Profil",
-              subtitle: "Kelola informasi akun",
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const ProfileUpdateScreen(),
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 16),
-          ],
+              const SizedBox(height: 24),
+
+              _buildMenuTile(
+                icon: Icons.call,
+                title: "Call Center",
+                subtitle: "+62 812 3456 7890",
+                onTap: () {
+                  Navigator.pop(context);
+                  _launchURL("tel:+6281234567890");
+                },
+              ),
+
+              _buildMenuTile(
+                icon: Icons.sms,
+                title: "SMS Center",
+                subtitle: "Kirim pesan ke admin",
+                onTap: () {
+                  Navigator.pop(context);
+                  _launchURL("sms:+6281234567890");
+                },
+              ),
+
+              _buildMenuTile(
+                icon: Icons.location_on,
+                title: "Lokasi Kami",
+                subtitle: "Lihat di Google Maps",
+                onTap: () {
+                  Navigator.pop(context);
+                  _launchURL("https://maps.google.com/?q=-7.2550,110.4300");
+                },
+              ),
+
+              const Divider(height: 32),
+
+              _buildMenuTile(
+                icon: Icons.person,
+                title: "Update Profil",
+                subtitle: "Kelola informasi akun",
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileUpdateScreen(),
+                    ),
+                  );
+                },
+              ),
+
+              const Divider(height: 32),
+
+              _buildMenuTile(
+                icon: Icons.history,
+                title: "Riwayat Belanja",
+                subtitle: "Lihat transaksi kamu",
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => HistoryScreen()),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );

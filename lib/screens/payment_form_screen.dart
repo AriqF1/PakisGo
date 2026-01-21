@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
+import '../providers/order_provider.dart';
 import '../utils/app_colors.dart';
 
 class PaymentFormScreen extends StatefulWidget {
@@ -91,13 +92,16 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
 
     setState(() => _isProcessing = true);
 
-    // Simulasi proses pembayaran
     await Future.delayed(const Duration(seconds: 2));
 
     if (mounted) {
       final cart = Provider.of<CartProvider>(context, listen: false);
+      final orderProvider = Provider.of<OrderProvider>(context, listen: false);
 
-      // Tampilkan nota pembayaran
+      // 🔥 SIMPAN KE HISTORY
+      orderProvider.addOrder(List.from(cart.items), _getTotalPayment(cart));
+
+      // Tampilkan nota
       await showDialog(
         context: context,
         barrierDismissible: false,
@@ -106,7 +110,6 @@ class _PaymentFormScreenState extends State<PaymentFormScreen>
 
       cart.resetCart();
 
-      // Kembali ke dashboard
       Navigator.of(context).popUntil((route) => route.isFirst);
     }
   }
