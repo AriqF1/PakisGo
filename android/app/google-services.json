@@ -12,7 +12,20 @@
           "package_name": "com.ariq.pakisgo"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "68094917540-36kim4nlrmpnbvuq5ij6qk2c2cnbuqgm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ariq.pakisgo",
+            "certificate_hash": "40d425a1eaa71bf16aab0d147a98fddd9b321d53"
+          }
+        },
+        {
+          "client_id": "68094917540-96enavfihseif0mu6che2g33k6eou2ej.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCIsU3eNPTasSB3WElxCTtezQF0d6F2AbY"
@@ -20,26 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:68094917540:android:901417c2e5a7a70d1cdf31",
-        "android_client_info": {
-          "package_name": "com.example.pakis_go"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCIsU3eNPTasSB3WElxCTtezQF0d6F2AbY"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "68094917540-96enavfihseif0mu6che2g33k6eou2ej.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "68094917540-4b1ega6gut2ems7n5og92u7cj963i97n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.pakisGo"
+              }
+            }
+          ]
         }
       }
     }
