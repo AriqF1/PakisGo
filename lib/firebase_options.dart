@@ -17,17 +17,29 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -40,49 +52,11 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBQ4beZenFrQ1oy4AkQWGZPeclDRBjxeVo',
-    appId: '1:68094917540:web:dcb3fbf6639fbbf21cdf31',
-    messagingSenderId: '68094917540',
-    projectId: 'pakisgo-37a9e',
-    authDomain: 'pakisgo-37a9e.firebaseapp.com',
-    storageBucket: 'pakisgo-37a9e.appspot.com',
-    measurementId: 'G-YJ9D3D09HK',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCIsU3eNPTasSB3WElxCTtezQF0d6F2AbY',
-    appId: '1:68094917540:android:901417c2e5a7a70d1cdf31',
+    appId: '1:68094917540:android:bad8c89386f508ff1cdf31',
     messagingSenderId: '68094917540',
     projectId: 'pakisgo-37a9e',
     storageBucket: 'pakisgo-37a9e.firebasestorage.app',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCWEdLIcC-Si6b_zoV5Objfa58g33ORzB0',
-    appId: '1:68094917540:ios:95dea740d838ef5e1cdf31',
-    messagingSenderId: '68094917540',
-    projectId: 'pakisgo-37a9e',
-    storageBucket: 'pakisgo-37a9e.firebasestorage.app',
-    iosBundleId: 'com.example.pakisGo',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCWEdLIcC-Si6b_zoV5Objfa58g33ORzB0',
-    appId: '1:68094917540:ios:95dea740d838ef5e1cdf31',
-    messagingSenderId: '68094917540',
-    projectId: 'pakisgo-37a9e',
-    storageBucket: 'pakisgo-37a9e.firebasestorage.app',
-    iosBundleId: 'com.example.pakisGo',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBQ4beZenFrQ1oy4AkQWGZPeclDRBjxeVo',
-    appId: '1:68094917540:web:39ff96e7576c29c11cdf31',
-    messagingSenderId: '68094917540',
-    projectId: 'pakisgo-37a9e',
-    authDomain: 'pakisgo-37a9e.firebaseapp.com',
-    storageBucket: 'pakisgo-37a9e.firebasestorage.app',
-    measurementId: 'G-8D9986L8WY',
   );
 }
