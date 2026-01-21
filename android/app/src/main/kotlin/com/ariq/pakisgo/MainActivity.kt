@@ -1,4 +1,4 @@
-package com.example.pakis_go
+package com.ariq.pakisgo
 
 import io.flutter.embedding.android.FlutterActivity
 
